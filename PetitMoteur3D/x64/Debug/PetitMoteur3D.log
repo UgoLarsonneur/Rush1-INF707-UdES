@@ -1,0 +1,20 @@
+﻿  compilation object save succeeded; see C:\Users\laru1401\Documents\_IG\Rush1\x64\Debug\MiniPhong.cso
+  compilation object save succeeded; see C:\Users\laru1401\Documents\_IG\Rush1\x64\Debug\MiniPhong.cso
+  compilation object save succeeded; see C:\Users\laru1401\Documents\_IG\Rush1\x64\Debug\ps1.cso
+  compilation object save succeeded; see C:\Users\laru1401\Documents\_IG\Rush1\x64\Debug\vs1.cso
+FXC : warning X4717: Effects deprecated for D3DCompiler_47
+  
+  compilation object save succeeded; see C:\Users\laru1401\Documents\_IG\Rush1\x64\Debug\MiniPhong.cso
+  stdafx.cpp
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Bloc.cpp
+  BlocEffet1.cpp
+  dispositif.cpp
+  dispositifD3D11.cpp
+  Horloge.cpp
+  InfoDispositif.cpp
+  Moteur.cpp
+  MoteurWindows.cpp
+  PetitMoteur3D.cpp
+  sommetbloc.cpp
+  PetitMoteur3D.vcxproj -> C:\Users\laru1401\Documents\_IG\Rush1\x64\Debug\PetitMoteur3D.exe
