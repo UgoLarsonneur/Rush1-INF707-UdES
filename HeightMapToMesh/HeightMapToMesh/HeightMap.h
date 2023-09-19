@@ -4,12 +4,13 @@ class HeightMap
 {
 private:
 	unsigned char* data;
-	unsigned int sizeX;
-	unsigned int sizeY;
+	int width;
+	int height;
 
 public:
 
 	HeightMap(char* file);
+	~HeightMap();
 
 	float Sample(const float& x, const float& y);
 };
