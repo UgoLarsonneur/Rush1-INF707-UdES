@@ -9,8 +9,8 @@ private:
 
 public:
 
-	HeightMap(char* file);
+	HeightMap(const char* file);
 	~HeightMap();
 
-	float Sample(const float& x, const float& y);
+	float Sample(const float& x, const float& y) const;
 };

@@ -129,10 +129,12 @@
   <ItemGroup>
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="HeightMapToMesh.cpp" />
+    <ClCompile Include="Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="stdb_image.h" />
+    <ClInclude Include="Terrain.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
