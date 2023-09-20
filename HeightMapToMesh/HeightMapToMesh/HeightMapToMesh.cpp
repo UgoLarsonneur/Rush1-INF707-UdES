@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include "HeightMap.h"
+#include "Terrain.h"
 
 const int res = 50;
 
@@ -23,6 +24,8 @@ int main(const int argc, const char** argv)
 	}
 
 	HeightMap hmap(argv[1]);
+
+	Terrain(hmap, 100, 10, 2);
 	
 
 	float x = 0.54848;
