@@ -23,10 +23,10 @@ float HeightMap::Sample(const float& _x, const float& _y) const
     float y = _y > 1.0f || _y < 0.0f ? std::fmodf(_y, 1.0f) : _y;
 
     unsigned int x1, x2, y1, y2;
-    x1 = std::floorf(x * (width  - 1));
-    x2 = std::ceilf( x * (width  - 1));
-    y1 = std::floorf(y * (height - 1));
-    y2 = std::ceilf( y * (height - 1));
+    x1 = static_cast<unsigned int>(std::floorf(x * (width  - 1)));
+    x2 = static_cast<unsigned int>(std::ceilf( x * (width  - 1)));
+    y1 = static_cast<unsigned int>(std::floorf(y * (height - 1)));
+    y2 = static_cast<unsigned int>(std::ceilf( y * (height - 1)));
 
     //     x1      x2
     //  y1 * ----- *
