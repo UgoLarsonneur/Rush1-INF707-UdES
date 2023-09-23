@@ -1,0 +1,17 @@
+# Rush 1
+
+Combien de polygones aurons nous ?
+	
+	En utilisant des triangles, nous aurons (5-1) * (5-1) * 2 = 32 polygones
+	
+	
+	
+Pourquoi créer dynamiquement le tableau ?
+	
+	Cela nous laisse choisir la resolution du tableau à la compilation.
+	
+	
+	
+Pour la classe de sommets, utiliser des floats. Pourquoi?
+
+	

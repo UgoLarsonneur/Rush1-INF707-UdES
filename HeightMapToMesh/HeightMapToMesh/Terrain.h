@@ -16,11 +16,16 @@ private:
 
 public:
 
-	Terrain(const HeightMap& heightMap, const unsigned int& resolution, const float& scaleH, const float& scaleV);
+	enum AspectFitterMode
+	{
+		KEEP_WIDTH, KEEP_HEIGHT, SQUARE
+	};
+
+	Terrain(const HeightMap& heightMap, const unsigned int& resolution, const float& scaleH, const float& scaleV, const AspectFitterMode& aspectFitterMode = KEEP_WIDTH);
 	Terrain(const Terrain& other);
 	~Terrain();
 
-	void setupVerts(const HeightMap& heightMap, const unsigned int& resolution, const float& scaleH, const float& scaleV);
+	void setupVerts(const HeightMap& heightMap, const unsigned int& resolution, const float& scaleH, const float& scaleV, const AspectFitterMode& aspectFitterMode);
 	void setupNormals();
 	void setupTris();
 

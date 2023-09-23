@@ -14,6 +14,16 @@ HeightMap::~HeightMap()
     stbi_image_free(data);
 }
 
+int HeightMap::getWidth() const
+{
+    return width;
+}
+
+int HeightMap::getHeight() const
+{
+    return height;
+}
+
 
 //bilinéaire
 float HeightMap::Sample(const float& _x, const float& _y) const

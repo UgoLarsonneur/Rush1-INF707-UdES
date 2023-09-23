@@ -12,5 +12,8 @@ public:
 	HeightMap(const char* file);
 	~HeightMap();
 
+	int getWidth() const;
+	int getHeight() const;
+
 	float Sample(const float& x, const float& y) const;
 };

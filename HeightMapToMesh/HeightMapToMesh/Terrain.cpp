@@ -2,13 +2,13 @@
 #include "DirectXMath.h"
 using namespace DirectX;
 
-Terrain::Terrain(const HeightMap& heightMap, const unsigned int& _res, const float& scaleH, const float& scaleV) : res(_res)
+Terrain::Terrain(const HeightMap& heightMap, const unsigned int& _res, const float& scaleH, const float& scaleV, const AspectFitterMode& aspectFitterMode) : res(_res)
 {
 	verts = new Vector3[res * res];
 	normals = new Vector3[res * res];
 	tris = new unsigned int[(res - 1) * (res - 1) * 6];
 
-	setupVerts(heightMap, res, scaleH, scaleV);
+	setupVerts(heightMap, res, scaleH, scaleV, aspectFitterMode);
 	setupNormals();
 	setupTris();
 }
@@ -25,17 +25,35 @@ Terrain::~Terrain()
 	delete[(res - 1) * (res - 1) * 6] tris;
 }
 
-void Terrain::setupVerts(const HeightMap& heightMap, const unsigned int& resolution, const float& scaleH, const float& scaleV)
+void Terrain::setupVerts(const HeightMap& heightMap, const unsigned int& resolution, const float& scaleH, const float& scaleV, const AspectFitterMode& aspectFitterMode)
 {
+	float aspect = static_cast<float>(heightMap.getWidth()) / heightMap.getHeight();
+	float width, height;
+
+	switch (aspectFitterMode)
+	{
+	case KEEP_WIDTH:
+		width = scaleH;
+		height = scaleH * aspect;
+		break;
+	case KEEP_HEIGHT:
+		width = scaleH / aspect;
+		height = scaleH;
+		break;
+	case SQUARE:
+		width = height = scaleH;
+		break;
+	}
+
 	for (unsigned int y = 0; y < res; ++y)
 	{
 		float tY = static_cast<float>(y) / (res - 1);
-		float posY = tY * scaleH;
+		float posY = tY * width;
 
 		for (unsigned int x = 0; x < res; ++x)
 		{
 			float tX = static_cast<float>(x) / (res - 1);
-			float posX = tX * scaleH;
+			float posX = tX * height;
 
 			float posZ = (heightMap.Sample(tX, tY) / 255) * scaleV;
 
