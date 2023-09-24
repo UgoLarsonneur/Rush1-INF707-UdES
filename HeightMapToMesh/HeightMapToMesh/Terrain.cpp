@@ -1,28 +1,30 @@
 #include "Terrain.h"
-#include "DirectXMath.h"
-using namespace DirectX;
 
-Terrain::Terrain(const HeightMap& heightMap, const unsigned int& _res, const float& scaleH, const float& scaleV, const AspectFitterMode& aspectFitterMode) : res(_res)
+Terrain::Terrain(const HeightMap& heightMap, const unsigned int& _res, const float& scaleH, const float& scaleV, const AspectFitterMode& aspectFitterMode)
+	: res(_res)
 {
-	verts = new Vector3[res * res];
-	normals = new Vector3[res * res];
-	tris = new unsigned int[(res - 1) * (res - 1) * 6];
+	sommets = new SommetTerrain[res * res];
+
+	//verts = new Vector3[res * res];
+	//normals = new Vector3[res * res];
+	index = new unsigned int[(res - 1) * (res - 1) * 6];
 
 	setupVerts(heightMap, res, scaleH, scaleV, aspectFitterMode);
 	setupNormals();
-	setupTris();
+	setupIndex();
 }
 
-Terrain::Terrain(const Terrain& other) : res(other.getResolution())
+/*Terrain::Terrain(const Terrain& other)
 {
 	//TODO?
-}
+}*/
 
 Terrain::~Terrain()
 {
-	delete[res * res] verts;
-	delete[res * res] normals;
-	delete[(res - 1) * (res - 1) * 6] tris;
+	//delete[] verts;
+	//delete[] normals;
+	delete[] sommets;
+	delete[] index;
 }
 
 void Terrain::setupVerts(const HeightMap& heightMap, const unsigned int& resolution, const float& scaleH, const float& scaleV, const AspectFitterMode& aspectFitterMode)
@@ -40,9 +42,6 @@ void Terrain::setupVerts(const HeightMap& heightMap, const unsigned int& resolut
 		dX = scaleH / aspect;
 		dY = scaleH;
 		break;
-	case SQUARE:
-		dX = dY = scaleH;
-		break;
 	}
 
 	for (unsigned int y = 0; y < res; ++y)
@@ -57,7 +56,8 @@ void Terrain::setupVerts(const HeightMap& heightMap, const unsigned int& resolut
 
 			float posZ = (heightMap.Sample(tX, (1.0f-tY)) / 255) * scaleV;
 
-			verts[x + y * res] = Vector3( posX, posY, posZ );
+			//verts[x + y * res] = Vector3( posX, posY, posZ );
+			sommets[x + y * res].setPos(Vector3(posX, posY, posZ));
 			//todo: set uv ?
 		}
 	}
@@ -69,24 +69,25 @@ void Terrain::setupNormals()
 	{
 		for (unsigned int x = 0; x < res; ++x)
 		{
-			normals[x + y * res] = calcNormal(x, y);
+			//normals[x + y * res] = calcNormal(x, y);
+			sommets[x + y * res].setNormal(calcNormal(x, y));
 		}
 	}
 }
 
-void Terrain::setupTris()
+void Terrain::setupIndex()
 {
 	int k = 0;
 	for (unsigned int y = 0; y < res - 1; ++y)
 	{
 		for (unsigned int x = 0; x < res - 1; ++x)
 		{
-			tris[k++] = y * res + x;
-			tris[k++] = (y + 1) * res + (x + 1);
-			tris[k++] = y * res + (x + 1);
-			tris[k++] = y * res + x;
-			tris[k++] = (y + 1) * res + x;
-			tris[k++] = (y + 1) * res + (x + 1);
+			index[k++] = y * res + x;
+			index[k++] = (y + 1) * res + (x + 1);
+			index[k++] = y * res + (x + 1);
+			index[k++] = y * res + x;
+			index[k++] = (y + 1) * res + x;
+			index[k++] = (y + 1) * res + (x + 1);
 		}
 	}
 }
@@ -106,10 +107,10 @@ Vector3 Terrain::calcNormal(const unsigned int& x, const unsigned int& y) const
 	n1 = n2 = n3 = n4 = Vector3{ 0, 0, 1 }; // Le Z est le haut
 	Vector3 ntest = n1 + n2;
 	// v1 = p1 – p0, etc...
-	if (y < res - 1) v1 = verts[x + (y + 1) * res] - verts[x + y * res];
-	if (x < res - 1) v2 = verts[x + 1 + y * res] - verts[x + y * res];
-	if (y > 0) v3 = verts[x +(y - 1) * res] - verts[x + y * res];
-	if (x > 0) v4 = verts[x - 1 + y * res] - verts[x + y * res];
+	if (y < res - 1) v1 = sommets[x + (y + 1) * res].getPos() - sommets[x + y * res].getPos();
+	if (x < res - 1) v2 = sommets[x + 1 + y * res].getPos() - sommets[x + y * res].getPos();
+	if (y > 0) v3 = sommets[x +(y - 1) * res].getPos() - sommets[x + y * res].getPos();
+	if (x > 0) v4 = sommets[x - 1 + y * res].getPos() - sommets[x + y * res].getPos();
 	// les produits vectoriels
 	if (y < res - 1 && x < res - 1) n1 = produitVectoriel(v2, v1);
 	if (y > 0 && x < res - 1) n2 = produitVectoriel(v3, v2);
@@ -153,6 +154,7 @@ unsigned int Terrain::getResolution() const
 	return res;
 }
 
+/*
 const Vector3* Terrain::getVerts() const
 {
 	return verts;
@@ -162,40 +164,45 @@ const Vector3* Terrain::getNormals() const
 {
 	return normals;
 }
+*/
 
-const unsigned int* Terrain::getTris() const
+const SommetTerrain* Terrain::getSommets() const
 {
-	return tris;
+	return sommets;
+}
+
+const unsigned int* Terrain::getIndex() const
+{
+	return index;
 }
 
 std::ostream& operator<<(std::ostream& out, const Terrain& terrain)
 {
-	out << "# ___VERTEXS___" << '\n';
 
 	size_t vertexCount = terrain.getResolution() * terrain.getResolution();
 
+	//peut être mieux décrire v puis vn puis v puis vn puis...
+	out << "# ___VERTEXS___" << '\n';
 	for (unsigned int i = 0; i < vertexCount; ++i)
 	{
-		out << "v " << terrain.getVerts()[i] << '\n';
+		out << "v " << terrain.getSommets()[i].getPos() << '\n';
 	}
 
 	out << '\n' << "# ___NORMALS___" << '\n';
-
 	for (unsigned int i = 0; i < vertexCount; ++i)
 	{
-		out << "vn " << terrain.getNormals()[i] << '\n';
+		out << "vn " << terrain.getSommets()[i].getNormal() << '\n';
 	}
 
 	out << '\n' << "# ___TRIANGLES___" << '\n';
-
 	for (unsigned int i = 0
 		; i < (terrain.getResolution() - 1) * (terrain.getResolution() - 1) * 2
 		; ++i)
 	{
 		out << "f "
-			<< terrain.getTris()[i * 3] + 1 << ' '
-			<< terrain.getTris()[i * 3 + 1] + 1 << ' '
-			<< terrain.getTris()[i * 3 + 2] + 1 << ' '
+			<< terrain.getIndex()[i * 3] + 1 << ' '
+			<< terrain.getIndex()[i * 3 + 1] + 1 << ' '
+			<< terrain.getIndex()[i * 3 + 2] + 1 << ' '
 			<< '\n';
 	}
 

@@ -1,7 +1,8 @@
-#include <iostream>
-#include <cmath>
 #include "HeightMap.h"
 #include "Terrain.h"
+#include "SommetTerrain.h"
+
+#include <iostream>
 #include <fstream>
 #include <exception>
 #include <string>
@@ -9,67 +10,75 @@
 
 
 
-
 struct MeshInfo {
-	Vector3* verts;
-	Vector3* normals;
-	unsigned int* tris;
+	SommetTerrain* sommets;
+	unsigned int* index;
 
 	int vertexCount;
 	int triCount;
 };
 
-MeshInfo ParseObj(const char* fileName) //à mettre plutot dans la classe qui réprésente une mesh dans le moteur
+//Retourne les informations lues. 
+MeshInfo ParseObj(const char* fileName) 
 {
 	//Utilisation de vecteurs, car on ne sais pas encore combien d'élements seront à allouer
 	//TODO: tester si lire fichier 2 fois est plus rapide
-	std::vector<Vector3> verts;
-	std::vector<Vector3> normals;
-	std::vector<unsigned int> tris;
+	std::vector<Vector3> posVec;
+	std::vector<Vector3> normalsVec;
+	std::vector<unsigned int> indexVec;
 
 	std::ifstream objFile(fileName);
 	if (!objFile)
 		throw std::invalid_argument("bad file");
 
 	std::string lineStart = "";
-	while (objFile >> lineStart)
+	while (objFile >> lineStart) //lecture du fichier
 	{
 		
 		if (lineStart == "v")
 		{
 			float x, y, z;
 			objFile >> x >> y >> z;
-			verts.push_back(Vector3{x, y , z});
+			posVec.push_back(Vector3{x, y , z});
 		}
 		else if (lineStart == "vn")
 		{
 			float x, y, z;
 			objFile >> x >> y >> z;
-			normals.push_back(Vector3{ x, y , z });
+			normalsVec.push_back(Vector3{ x, y , z });
 		}
 		else if (lineStart == "f")
 		{
 			unsigned int v1, v2, v3;
 			objFile >> v1 >> v2 >> v3;
-			tris.push_back(v1);
-			tris.push_back(v2);
-			tris.push_back(v3);
+			indexVec.push_back(v1);
+			indexVec.push_back(v2);
+			indexVec.push_back(v3);
 		}
 
 		objFile.ignore(LLONG_MAX, '\n'); //prochaine ligne
 	}
 
-	MeshInfo meshInfo{
-		new Vector3[verts.size()],
-		new Vector3[normals.size()],
-		new unsigned int[tris.size()],
-		verts.size(),
-		tris.size()
+	//Creation du tableu de sommet (erreur si il n'y a pas autant de normales que de sommets...)
+	SommetTerrain* sommets = new SommetTerrain[posVec.size()];
+	for (size_t i = 0; i < posVec.size(); i++)
+	{
+		sommets[i].setPos(posVec[i]);
+		sommets[i].setNormal(normalsVec[i]);
+	}
+
+	unsigned int* index = new unsigned int[indexVec.size()];
+	std::copy(indexVec.begin(), indexVec.end(), index);
+	
+	MeshInfo meshInfo {
+		sommets,
+		index,
+		posVec.size(),
+		indexVec.size()
 	};
 
-	std::copy(verts.begin(), verts.end(), meshInfo.verts);
-	std::copy(normals.begin(), normals.end(), meshInfo.normals);
-	std::copy(tris.begin(), tris.end(), meshInfo.tris);
+	//std::copy(verts.begin(), verts.end(), meshInfo.pos);
+	//std::copy(normals.begin(), normals.end(), meshInfo.normals);
 
 	return meshInfo;
 }

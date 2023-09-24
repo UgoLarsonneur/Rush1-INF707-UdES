@@ -130,12 +130,14 @@
   <ItemGroup>
     <ClCompile Include="HeightMap.cpp" />
     <ClCompile Include="HeightMapToMesh.cpp" />
+    <ClCompile Include="SommetTerrain.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeightMap.h" />
     <ClInclude Include="OBJParser.h" />
+    <ClInclude Include="SommetTerrain.h" />
     <ClInclude Include="stdb_image.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Vector3.h" />
