@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeightMap.h" />
+    <ClInclude Include="OBJParser.h" />
     <ClInclude Include="stdb_image.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Vector3.h" />

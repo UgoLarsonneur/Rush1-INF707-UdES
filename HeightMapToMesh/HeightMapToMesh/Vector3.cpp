@@ -27,6 +27,21 @@ float Vector3::getZ() const
 	return z;
 }
 
+void Vector3::setX(const float& val)
+{
+	x = val;
+}
+
+void Vector3::setY(const float& val)
+{
+	y = val;
+}
+
+void Vector3::setZ(const float& val)
+{
+	z = val;
+}
+
 Vector3 operator+(const Vector3& v1, const Vector3& v2)
 {
 	Vector3 v(v1);

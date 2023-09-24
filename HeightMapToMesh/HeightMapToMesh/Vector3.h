@@ -13,6 +13,10 @@ public:
 	float getY() const;
 	float getZ() const;
 
+	void setX(const float& val);
+	void setY(const float& val);
+	void setZ(const float& val);
+
 
 	Vector3 getNormalised();
 

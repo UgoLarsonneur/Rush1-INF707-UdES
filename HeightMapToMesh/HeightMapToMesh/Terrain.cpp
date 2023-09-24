@@ -28,34 +28,34 @@ Terrain::~Terrain()
 void Terrain::setupVerts(const HeightMap& heightMap, const unsigned int& resolution, const float& scaleH, const float& scaleV, const AspectFitterMode& aspectFitterMode)
 {
 	float aspect = static_cast<float>(heightMap.getWidth()) / heightMap.getHeight();
-	float width, height;
+	float dX, dY;
 
 	switch (aspectFitterMode)
 	{
 	case KEEP_WIDTH:
-		width = scaleH;
-		height = scaleH * aspect;
+		dX = scaleH;
+		dY = scaleH * aspect;
 		break;
 	case KEEP_HEIGHT:
-		width = scaleH / aspect;
-		height = scaleH;
+		dX = scaleH / aspect;
+		dY = scaleH;
 		break;
 	case SQUARE:
-		width = height = scaleH;
+		dX = dY = scaleH;
 		break;
 	}
 
 	for (unsigned int y = 0; y < res; ++y)
 	{
 		float tY = static_cast<float>(y) / (res - 1);
-		float posY = tY * width;
+		float posY = tY * dX;
 
 		for (unsigned int x = 0; x < res; ++x)
 		{
 			float tX = static_cast<float>(x) / (res - 1);
-			float posX = tX * height;
+			float posX = tX * dY;
 
-			float posZ = (heightMap.Sample(tX, tY) / 255) * scaleV;
+			float posZ = (heightMap.Sample(tX, (1.0f-tY)) / 255) * scaleV;
 
 			verts[x + y * res] = Vector3( posX, posY, posZ );
 			//todo: set uv ?
